@@ -37,13 +37,24 @@
             if ((typeof options.startTime == 'object') && (options.startTime.constructor == Date)) {
                 // console.log("Have been passed a date object? hopefully?");
                 var now = new Date();
-                if (options.startTime.getTime() < now.getTime()) {
+                
+                //Added timezone offset to the plugin, but is hard-set to UTC-6 (central time) for now
+                // Until I can update the options section.
+                localTime = now.getTime();
+    	        localOffset = now.getTimezoneOffset() * 60000;
+		        utc = localTime + localOffset;
+		        offset = -6.0;   
+	        	kc = utc + (3600000*offset);
+		
+		        var newnow = new Date(kc);
+				
+                if (options.startTime.getTime() < newnow.getTime()) {
                     options.startTime.setFullYear(options.startTime.getFullYear() + 1);
                     // console.log("options.startTime is now = " + options.startTime);
                 }
                 // console.log("options.startTime.getTime() = " + options.startTime.getTime());
                 // console.log("now.getTime() = " + now.getTime());
-                var datediff = Math.ceil((options.startTime.getTime() - now.getTime()) / 1000);
+                var datediff = Math.ceil((options.startTime.getTime() - newnow.getTime()) / 1000);
                 // console.log("datediff = " + datediff);
                 var days = Math.floor(datediff / 86400);
                 // console.log("days = " + days);
